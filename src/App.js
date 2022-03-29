@@ -1,25 +1,58 @@
 import logo from './logo.svg';
 import './App.css';
+import Homepage from './pages/Homepage';
+import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
+import Productinfo from './pages/Productinfo';
+import Cartpage from './pages/Cartpage';
+import Loginpage from './pages/Loginpage';
+import Registerpage from './pages/Registerpage';
+import './stylesheets/layout.css'
+import './stylesheets/products.css'
+import './stylesheets/authentication.css'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import OrdersPage from './pages/OrdersPage';
+import AdminPage from './pages/AdminPage';
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ToastContainer />
+      <BrowserRouter>
+        <Routes>
+
+          <Route path='/' 
+          exact element={<ProtectedRoutes>
+            <Homepage /></ProtectedRoutes>} />
+
+          <Route path='/productinfo/:productid' exact element={<ProtectedRoutes><Productinfo /></ProtectedRoutes>} />
+          <Route path='/cart' exact element={<ProtectedRoutes><Cartpage /></ProtectedRoutes>} />
+          <Route path='/orders' exact element={<ProtectedRoutes><OrdersPage /></ProtectedRoutes>} />
+          <Route path='/admin' exact element={<ProtectedRoutes><AdminPage /></ProtectedRoutes>} />
+
+          <Route path='/login' exact element={<Loginpage />} />
+          <Route path='/register' exact element={<Registerpage />} />
+
+
+        </Routes>
+      </BrowserRouter>
+
     </div>
   );
 }
 
 export default App;
+
+export const ProtectedRoutes = ({ children }) => {
+
+  if (localStorage.getItem('currentUser')) {
+    return children
+  }
+  else {
+     return <Navigate to="/login"/>
+
+  }
+
+
+};
